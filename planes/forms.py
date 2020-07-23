@@ -24,13 +24,21 @@ class RegisterForm(forms.Form):
     username = forms.CharField()
     email = forms.EmailField(required=True)
 
-
+from django.contrib.admin.widgets import AdminDateWidget
 class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
         exclude = []
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder':'введите название'})
+            'title': forms.TextInput(attrs={'placeholder':'введите название'}),
+            # 'plan_load_date_ASEZ': forms.SelectDateWidget(
+            #     empty_label=("Choose Year", "Choose Month", "Choose Day")),
+            'plan_load_date_ASEZ': forms.TextInput(attrs={'type': 'date'}),
+            'fact_load_date_ASEZ': forms.TextInput(attrs={'type': 'date'}),
+            'plan_sign_date': forms.TextInput(attrs={'type': 'date'}),
+            'fact_sign_date': forms.TextInput(attrs={'type': 'date'}),
+            'start_date': forms.TextInput(attrs={'type': 'date'}),
+            'end_time': forms.TextInput(attrs={'type': 'date'}),
         }
 
 
@@ -62,6 +70,7 @@ class SumsBYNForm_quarts(forms.ModelForm): # TODO TESTdelete it away
 class SumsBYNForm_year(forms.ModelForm):
     class Media:
         js = ('planes/js/script_form_year.js',)
+
     class Meta:
         model = SumsBYN
         fields = [
@@ -71,78 +80,7 @@ class SumsBYNForm_year(forms.ModelForm):
         ]
 
 
-class SumsBYNForm(forms.ModelForm):
-    class Meta:
-        model = SumsBYN
-        fields = [
-            'period',
-            'plan_sum_SAP',
-            'contract_sum_without_NDS_BYN',
-            'forecast_total',
-            'fact_total',
-            'economy_total',]
-
-class SumsBYNForm_economist(forms.ModelForm):
-    class Meta:
-        model = SumsBYN
-        fields = [
-            'period',
-            'plan_sum_SAP',
-            'contract_sum_without_NDS_BYN',
-            'forecast_total',
-            'fact_total',
-            'economy_total',]
-        widgets = {
-            'period': forms.Select(attrs={'disabled': True}),
-            'plan_sum_SAP': forms.TextInput(attrs={'readonly':False}),
-            'contract_sum_without_NDS_BYN': forms.TextInput(attrs={'readonly':False}),
-            'forecast_total': forms.TextInput(attrs={'readonly': False}),
-            'fact_total': forms.TextInput(attrs={'readonly': False}),
-            'economy_total': forms.TextInput(attrs={'readonly': True}),
-        }
-
-
-class SumsBYNForm_lawyer(forms.ModelForm):
-    class Meta:
-        model = SumsBYN
-        fields = [
-            'period',
-            'plan_sum_SAP',
-            'contract_sum_without_NDS_BYN',
-            'forecast_total',
-            'fact_total',
-            'economy_total', ]
-        widgets = {
-            'period': forms.Select(attrs={'disabled': True}),
-            'plan_sum_SAP': forms.TextInput(attrs={'readonly':True}),
-            'contract_sum_without_NDS_BYN': forms.TextInput(attrs={'readonly': True}),
-            'forecast_total': forms.TextInput(attrs={'readonly': True}),
-            'fact_total': forms.TextInput(attrs={'readonly': True}),
-            'economy_total': forms.TextInput(attrs={'readonly': True}),
-        }
-
-
-class SumsBYNForm_asez(forms.ModelForm):
-    class Meta:
-        model = SumsBYN
-        fields = [
-            'period',
-            'plan_sum_SAP',
-            'contract_sum_without_NDS_BYN',
-            'forecast_total',
-            'fact_total',
-            'economy_total', ]
-        widgets = {
-            'period': forms.Select(attrs={'disabled':False}),
-            'plan_sum_SAP': forms.TextInput(attrs={'readonly':False}),
-            'contract_sum_without_NDS_BYN': forms.TextInput(attrs={'readonly': False}),
-            'forecast_total': forms.TextInput(attrs={'readonly': False}),
-            'fact_total': forms.TextInput(attrs={'readonly': False}),
-            'economy_total': forms.TextInput(attrs={'readonly': False}),
-        }
-
 class PlanningForm(forms.ModelForm):
-    # arr = [ item for item in Curator if item.title != "ALL"]
     curator = forms.ModelChoiceField(Curator.objects.exclude(title='ALL'))
     delete = forms.BooleanField(label='удалить', required=False)
 
@@ -170,3 +108,7 @@ class YearForm(forms.ModelForm):
         labels = {
             'year': 'Год'
         }
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
